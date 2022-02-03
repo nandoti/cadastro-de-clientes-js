@@ -6,13 +6,6 @@ const openModal = () =>
 const closeModal = () => {
   clearFileds();
   document.getElementById("modal").classList.remove("active");
-  
-};
-const tempClient = {
-  nome: "Leandro",
-  email: "fernando.adriano.tavares@gmail.con",
-  celular: "11969115960",
-  cidade: "RJ",
 };
 
 const getLocalStorage = () =>
@@ -60,20 +53,73 @@ const saveClient = () => {
     const client = {
       nome: document.getElementById("nome").value,
       email: document.getElementById("email").value,
-      Celular: document.getElementById("celular").value,
+      celular: document.getElementById("celular").value,
       cidade: document.getElementById("cidade").value,
     };
     createClient(client);
-
+    updateTable();
     closeModal();
   }
 };
+
+const createRow = (client, index) => {
+  const newRow = document.createElement("tr");
+  newRow.innerHTML = `
+      <td>${client.nome}</td>
+      <td>${client.email}</td>
+      <td>${client.celular}</td>
+      <td>${client.cidade}</td>
+        <td>
+            <button id="edit-${index}" type="button" class="button ciano" >Editar</button>
+            <button id="delete-${index}" type="button" class="button red">Excluir</button>
+        </td>
+  `;
+  document.querySelector("#tbClient>tbody").appendChild(newRow);
+};
+
+//Limpa a tabela
+
+const clearTable = () => {
+  const rows = document.querySelectorAll("#tbClient>tbody tr");
+  rows.forEach((row) => row.parentNode.removeChild(row));
+};
+
+const updateTable = () => {
+  const dbClient = readClient();
+  clearTable();
+  dbClient.forEach(createRow);
+};
+
+const editCleint = (index) => {
+  const client = readClient()
+}
+
+const editDelete = (ev) => {
+  if (ev.target.type == 'button') {
+
+    const [action, index] = ev.target.id.split('-')
+
+    if (action == 'edit') {
+     editCleint(index)
+    } else {
+      
+    }
+  }
+
+}
+
+updateTable();
 
 // Eventos
 document
   .getElementById("cadastrarCliente")
   .addEventListener("click", openModal);
 
-document.getElementById("modalClose").addEventListener("click", closeModal);
+document.getElementById("modalClose")
+  .addEventListener("click", closeModal);
 
-document.getElementById("salvar").addEventListener("click", saveClient);
+document.getElementById("salvar")
+  .addEventListener("click", saveClient);
+
+document.querySelector('#tbClient>tbody')
+  .addEventListener('click', editDelete)
